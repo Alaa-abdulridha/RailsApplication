@@ -1,0 +1,41 @@
+<div class="container padding">
+	<h1><%= @post.name %></h1>
+	<p>Created by: <%= link_to @post.user.name, user_path(@post.user.id) %> on <%= @post.date %></p>
+	<p>Status: <%= @post.status %></p>
+	<% if logged_in? and current_user.voted_for? @post %>
+		<p class="text-success">You have applied for this job.</p>
+	<% else %>
+		<p class="text-success"><%= @post.get_upvotes.size %> people has applied for this job.</p>
+	<% end %>
+	<% if logged_in? and current_user.id == @post.user_id%>
+		<%= link_to "Edit", edit_user_post_path(current_user.id, @post.id), class:"btn btn-default" %>
+		<%= link_to "Delete", user_post_path(current_user.id, @post.id), method: :delete, data: { confirm: 'Sure? This action cannot be reverted!' }, class:"btn btn-danger" %>
+	<% end %>
+	<hr>
+	<h3>Description:</h3>
+	<p class="textarea"><%= @post.description %></p>
+	<br>
+	<h3>Location:</h3>
+	<p><%= @post.address %>, <%= @post.zipcode %> <%= @post.city %>, <%= @post.state %>, <%= @post.country%>.</p>
+	<br>
+	<% if logged_in? and current_user.jobseeker? %>
+		<%= link_to "Apply now!", apply_user_post_path(current_user.id, @post.id), method: :put, remote: true, class:"btn btn-success" %>
+		<div id="apply-btn"></div>
+	<% elsif !logged_in? %>
+		<%= link_to "Apply now!", "", class:"btn btn-success disabled" %>
+		<p>Please sign up/sign in to apply for this job!</p>
+	<% end %>
+	<hr>
+	<% if logged_in? and current_user.id == @post.user_id %>
+		<% if @post.votes_for.up.by_type(User).voters.size != 0 %>
+			<h2>Applicants:</h2><br>
+				<% @post.votes_for.up.by_type(User).voters.each do |applicant| %>
+					<h4>- <%= link_to applicant.name, user_path(applicant.id) %></h4>
+					<hr>
+				<% end %>
+		<% elsif @post.votes_for.up.by_type(User).voters.size == 0 %>
+			<h4>No application yet!</h4>
+		<% end %>
+	<% end %>
+
+</div>

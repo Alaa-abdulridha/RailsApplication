@@ -1,0 +1,32 @@
+<div class="container margin-top padding-btm">
+	<div class="col-md-6 col-md-offset-3">
+		<h1>Signup!</h1>
+
+		<%= form_for @user, remote: true do |form| %>
+			<div class="form-group">
+				<%= form.label :name %>
+				<%= form.text_field :name, class:"form-control" %>
+			</div>
+
+			<div class="form-group">
+				<%= form.label :email %>
+				<%= form.text_field :email, class:"form-control" %>
+			</div>
+			<div class="form-group">
+				<%= form.label :role, "Sign up as?" %>
+	        	<%= form.select :role, options_for_select([:recruiter, :jobseeker], :recruiter), {}, class:"form-control custom-select" %>
+	        </div>
+
+			<div class="form-group">
+				<%= form.label :password %>
+		 		<%= form.password_field :password, class:"form-control" %>
+		 	</div>
+		 	<div class="form-group">
+				<%= form.label :password_confirmation, "Confirm password" %>
+		  		<%= form.password_field :password_confirmation, class:"form-control" %>
+		  	</div>
+
+		  	<%= form.submit "Submit", class:"btn btn-primary align-center" %>
+		<% end %>
+	</div>
+</div>

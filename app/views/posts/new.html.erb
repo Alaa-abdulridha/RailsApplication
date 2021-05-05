@@ -1,0 +1,89 @@
+<div class="container">
+	<h1>Create new job post!</h1>
+
+	<%= form_for @post, url: user_posts_path(current_user.id), method: :post, remote: true do |form| %>
+		<%= form.hidden_field :user_id, value:current_user.id %>
+		<div class="form-group">
+			<%= form.label :name %>
+			<%= form.text_field :name, class:"form-control" %>
+		</div>
+
+		<div class="form-group">
+			<%= form.label :description %>
+			<%= form.text_area :description, class:"form-control", rows: "8"%>
+		</div>
+
+		<div class="form-group" id="datepicker">
+      		<%= form.label :date %>
+      		<%= form.text_field :date, data:{provide:"datepicker", date_format: 'yyyy-mm-dd', turbolinks: false }, class:"form-control"%>
+    	</div>
+
+    	<div class="form-group">
+      		<%= form.label :address %>
+      		<%= form.text_field :address, class:"form-control", rows:"5"%>
+    	</div>
+
+	    <div class="form-group">
+	    	<%= form.label :country %>
+	    	<select id="country" name="post[country]" class="form-control form-control-small" required>
+	      	<option value="" selected>Select Your Country</option>
+	      	<% CS.countries.each do |key, value| %>
+	        	<option value="<%= key %>"><%= value%></option>
+	     	<% end %>
+	    	</select>
+	    </div>
+
+	    <div class="form-group">
+	    	<%= form.label :state %>
+	    	<select id="states-of-country" name="post[state]" class="form-control form-control-small" required>
+	        <option id="no-state" value="" selected>Select Your State</option>
+	      	<% CS.states(:my).each do |key, value| %>
+	        	<option value="<%= value %>" id="<%= key %>"><%= value %></option>
+	      	<% end %>
+	    	</select>
+	    </div>
+
+	    <div class="form-group">
+	      <%= form.label :city %>
+	      <select id="cities-of-state" name="post[city]" class="form-control form-control-small" required>
+	      	<option value="" selected>Select Your City</option>
+	      </select>
+	    </div>
+
+	    <script type="text/javascript">
+
+	      $(document).on('change', '#states-of-country', function(e) {
+	        var cities_of_state, input_state, state;
+	        input_state = $(this);
+	        cities_of_state = $('#cities-of-state');
+	        state = this.options[e.target.selectedIndex].id;
+	        if (state === 'no-state') {
+	          return cities_of_state.html('');
+	        } else {
+	          $.ajax({
+	            url: '/cities/' + $(this).children(':selected').attr('id'),
+	            success: function(data) {
+	              var opt;
+	              opt = '<option value="" selected>Select Your City</option>';
+	              if (data.length === 0) {
+
+	              } else {
+	                data.forEach(function(i) {
+	                  opt += '<option value="' + i + '">' + i + '</option>';
+	                });
+	                cities_of_state.html(opt);
+	              }
+	            }
+	          });
+	        }
+	      });
+	    </script>
+
+	    <div class="form-group">
+	      <%= form.label :zipcode %>
+	      <%= form.number_field :zipcode, class:"form-control", rows:"5" %>
+	    </div>
+
+	  	<%= form.submit "Submit", class:"btn btn-primary align-center" %>
+	<% end %>
+</div>

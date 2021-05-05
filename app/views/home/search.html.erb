@@ -1,0 +1,29 @@
+<div class="container">
+	<h3>Results for: <%= params[:search] %></h3>
+	<br>
+	<ul>
+
+		<% if !@results.nil? %>
+		<% @results.each do |result| %>
+			<li>
+				<h4><%= link_to result.name, user_post_path(result.user.id, result.id) %></h4>
+				<p>Created by: <%= link_to result.user.name, user_path(result.user_id) %> on <%= result.date %></p>
+			</li>
+				
+		<% end %>
+		<% end %>
+		<% if !@user.nil? %>
+		<% @user.each do |user| %>
+			<li>
+				<h4><%= link_to user.name, user_path(user.id) %></h4>
+				<p>Role: <%= user.role %></p>
+			</li>
+		<% end %>
+		<% end %>
+		<% if @user.nil? and @results.nil? %>
+			<h3>Uh Oh, nothing's found ;(</h3>
+		<% elsif @user.size == 0 and @results.size == 0 %>
+			<h3>Uh Oh, nothing's found ;(</h3>
+		<% end %>
+	</ul>
+</div>

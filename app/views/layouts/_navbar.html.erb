@@ -1,0 +1,28 @@
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Rails Bug Hub</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <div id="search-bar", class="navbar-left navbar-form">
+      <div class="form-group">
+        <%= form_tag '/search', method: :get do %>
+          <%= text_field_tag :search, params[:search], class:"form-control" %>
+          <%= submit_tag "Search", class:"btn btn-default " %>
+        <% end %>
+      </div>
+      </div>
+      <% if !logged_in? %>
+        <li><%= link_to "Sign up", sign_up_path %></li>
+        <li><%= link_to "Sign in", sign_in_path %></li>
+      <% elsif logged_in? %>
+        <% if current_user.recruiter? %>
+          <li><%= link_to "Create Job Post", new_user_post_path(current_user.id) %></li>
+        <% end %>
+        <li><%= link_to current_user.name, user_path(current_user.id) %></li>
+        <li><%= link_to "Sign out", sign_out_path, method: :delete %></li>
+      <% end %>
+    </ul>
+    
+  </div>
+</nav>

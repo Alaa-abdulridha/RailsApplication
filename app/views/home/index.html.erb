@@ -1,0 +1,25 @@
+<div class="container padding">
+	<div class="row">
+		<h1>Welcome to Rails bug test!</h1>
+	</div>
+	<br>
+	<div class="row">
+		<% if @post.size != 0 %>
+		
+		<% @post.each do |post| %>
+			
+			<div class="col-md-12">
+				<h3><%= link_to post.name, user_post_path(post.user_id, post.id) %></h3>
+				<p>Created by: <%= link_to post.user.name, user_path(post.user.id) %> on <%= post.date %></p>			
+				<hr>
+			</div>
+		<% end %>
+		
+	<% else %>
+		<h3>No job post created yet</h3>
+	<% end %>
+
+	<p><%= paginate @post %></p>
+	</div>
+</div>
+

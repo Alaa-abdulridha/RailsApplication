@@ -1,0 +1,67 @@
+<div class="container padding">
+	<h1>Welcome to <%= @user.name %>'s profile (<%= @user.role.capitalize %>)</h1>
+	<br>
+	<% if logged_in? %>
+		<%= link_to "Edit", edit_user_path(@user.id), class:"btn btn-default" %>
+	<% end %>
+	<hr>
+	<h4>Name: <%= @user.name %></h4>
+	<h4>Email: <%= @user.email %></h4>
+	<% if logged_in? and @user.recruiter? %>
+		<% if @user.id == current_user.id %>
+			<h2>Your job posts:</h2>
+			<br>
+			<% if current_user.posts.size != 0 %>
+				<% @post.each do |post| %>	
+					<h4><%= link_to post.name, user_post_path(@user.id, post.id) %></h4>
+					<p>Created on: <%= post.date %></p>
+					<hr>
+				<% end %>
+				<p><%= paginate @post %></p>
+			<% else %>
+				<h4>You have no job post yet, <%= link_to "create one now!", new_user_post_path(current_user.id) %>
+			<% end %>
+		<% elsif @user.id != current_user.id and @user.recruiter? %>
+			<h2><%= @user.name %>'s posts:</h2>
+			<br>
+			<% if @user.posts.size != 0 %>
+				<% @post.each do |post| %>	
+					<h4><%= link_to post.name, user_post_path(@user.id, post.id) %></h4>
+					<p>Created on: <%= post.date %></p>
+					<hr>
+				<% end %>
+				<p><%= paginate @post %></p>
+			<% else %>
+				<h4><%= @user.name %> has no job post yet</h4>
+			<% end %>
+		<% end %>
+	<% elsif @user.recruiter? %>
+		<h2><%= @user.name %>'s posts:</h2>
+		<br>
+		<% if @user.posts.size != 0 %>
+			<% @post.each do |post| %>	
+				<h4><%= link_to post.name, user_post_path(@user.id, post.id) %></h4>
+				<p>Created on: <%= post.date %></p>
+				<hr>
+			<% end %>
+			<p><%= paginate @post %></p>
+		<% else %>
+			<h4><%= @user.name %> has no job post yet</h4>
+			<hr>
+		<% end %>
+	<% end %>
+	<% if logged_in? and current_user.id == @user.id %>
+		<% if current_user.jobseeker? %>
+			<% if current_user.find_up_voted_items.size != 0 %>
+				<h2>Your application history:</h2><br>
+				<% current_user.find_up_voted_items.each do |application| %>
+					<h4>- <%= link_to application.name, user_post_path(application.user_id, application.id) %></h4>
+					<hr>
+				<% end %>
+			<% elsif current_user.find_up_voted_items.size == 0 %>
+				<h4>You have not applied for jobs yet!</h4>
+				<%= link_to "Start apply here!", root_path, class:"btn btn-success" %>
+			<% end %>
+		<% end %>
+	<% end %>
+</div>

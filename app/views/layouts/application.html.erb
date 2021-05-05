@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rails Bug Hub</title>
+    <%= csrf_meta_tags %>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+
+  	<%= render partial: "/layouts/navbar" %>
+
+  	<div id="flash">
+    	<% flash.each do |key, value| -%>
+      		<div id="flash_<%= key %>", class="<%= flash_class(key) %>"><%=h value %></div>
+    	<% end %>
+  	</div>
+  	
+    <%= yield %>
+  </body>
+</html>
